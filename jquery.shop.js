@@ -1,9 +1,11 @@
 ( function ( $ ) {
+
 	/*@class Cookie
 	 *
 	 *Represents the class ot be used to interact with Javascript Cookies
 	 *@constructor
 	 */
+
 	function Cookie () {
 		//constructor
 	};
@@ -48,6 +50,7 @@
 	 * @param {string} name Name to be found ( index )
 	 * @return {string|null} Value stored in cookie if found
 	 */
+
 	CP.get = function ( name ) {
 		var nameEq = escape( name ) + '=';
 		var slices = document.cookie.split(';');
@@ -97,10 +100,17 @@
 
 	};
 
+	//Assign Cart class's prototype to a variable for easy use
 	var SCP = Cart.prototype;
 
+	/* function to get current orders in array forms
+	 *
+	 * @return {array} orders Array containing current orders' details with
+	 * quantity nad id
+	 */
+
 	SCP.get = function () {
-		var orders = $.parseJSON( this.cookieHandle.read( this.cookieName ) );
+		var orders = JSON.parse( this.cookieHandle.read( this.cookieName ) );
 
 		if ( orders == null || orders == undefined || orders== "" ){
 			return null;
@@ -109,11 +119,23 @@
 		}
 	};
 
+	/* function to set cookie from array
+	 *
+	 * @param {array} orders The array to be stored in JSON form to be stored
+	 * in Javascript cookies
+	 */
+
 	SCP.setArrayCookie = function ( orders ) {
-		var orderJSONString = $.toJSON( orders );
+		var orderJSONString = JSON.stringify( orders );
 
 		this.cookieHandle.create( this.cookieName, orderJSONString );
 	};
+
+	/* function to add a certain count of item to current quantity if it
+	 * exists otherwise it's created
+	 * @param {int} orderId Id of the item to be added
+	 * @param {int} count Count of the item to be added (must be > 0)
+	 */
 
 	SCP.set = function ( orderId, count ) {
 		count <= 0 ? return;
@@ -148,6 +170,11 @@
 
 	};
 
+	/* function to get total no. of items in the cart
+	 *
+	 * @return {int} No. of items
+	 */
+
 	SCP.total = function () {
 		var orders = this.get();
 		if ( orders == null ){
@@ -156,6 +183,13 @@
 			return orders.length();
 		}
 	};
+
+	/* function to remove a certain count from an item's quantity
+	 *
+	 * @param {int} orderId id of item in consideration
+	 * @param {int} count Count to be removed from quantity (by default is 1)
+	 */
+
 
 	SCP.remove = function ( orderId, count) {
 		count = count ? count : 1;
@@ -187,6 +221,11 @@
 
 	};
 
+	/* function to remove all the data of a particular item
+	 *
+	 * @param {int} orderId Id of the item to be deleted
+	 */
+
 	SCP.removeItem = function ( orderId ) {
 		if ( orderId == null || orderId == undefined )
 			return;
@@ -211,6 +250,12 @@
 		this.setArrayCookie( orders );
 
 	};
+
+	/* function to change the quantity of an item directly to some no.
+	 *
+	 * @param {int} orderId Id of item under consideration
+	 * @param {int} count Integer to which the quantity has to be changed
+	 */
 
 	SCP.change = function ( orderId, count ){
 		if( count == null || count == undefined )
@@ -241,9 +286,15 @@
 
 	};
 
+	/* function to clear all the data stored in cookie
+	 */
+
 	SCP.clear = function () {
-		this.cookieHandle.create( this.cookieName, $.toJSON([]) );
+		this.cookieHandle.create( this.cookieName, JSON.stringify([]) );
 	};
+
+	/* function to remove the cookie from browser
+	 */
 
 	SCP.removeCookie = function () {
 		$.cookie.erase( this.cookieName );
