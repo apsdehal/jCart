@@ -21,6 +21,10 @@
 	CP.create = function ( name, value, options ) {
 		var expires, cookieString;
 
+		/*You can set defaults by assigning an object to $.cookie.defaults
+		this will be overridden by options passed in create function */
+		options = $.extend( {}, this.defaults, options );
+
 		if ( options.duration ) {
 			var date = new Date();
 
@@ -55,7 +59,7 @@
 		}
 
 		return null;
-	}
+	};
 
 	/* function to delete a cookie with a certain index
 	 *
@@ -64,9 +68,92 @@
 
 	CP.erase = function ( name ) {
 		this.create( name, '', -1 );
-	}
+	};
+
 
 	//Assign cookie object as jquery method
 	$.cookie = new Cookie();
+
+	//Set defaults for the cart
+	$.cookie.defaults = {path: '/'};
+
+
+	/* @class Cart
+	 *
+	 * Represents class to be used as cart
+	 * @constructor
+	 */
+
+	function Cart(){
+		//Constructor
+		var proto = this.prototype;
+		proto.cookieName = 'cart';
+		proto.index = 0;
+
+		//Set a handle to read and create cookies
+		proto.cookieHandle = {read:null, create:null};
+		proto.cookieHandle.read = $.cookie.get;
+		proto.cookieHandle.create = $.cookie.create;
+
+	};
+
+	var SCP = Cart.prototype;
+
+	SCP.get = function () {
+		var orders = $.parseJSON( this.cookieHandle.read( this.cookieName ) );
+
+		if ( orders == null || orders == undefined || orders== "" ){
+			return null;
+		} else {
+			return orders;
+		}
+	};
+
+	SCP.setArrayCookie = function ( orders ) {
+		var orderJSONString = $.toJSON( orders );
+
+		this.cookieHandle.create( this.cookieName, orderJSONString );
+	};
+
+	SCP.set = function ( orderId, count ) {
+		count <= 0 ? return;
+
+		var orders = this.get();
+			idAlready = false,
+			i = 0,
+			current = null;
+
+		if ( orders == null || orders == undefined || orders== "" ){
+			orders = [];
+		}
+
+		for ( i = 0; i<orders.length; i++ ) {
+			current = orders[i];
+			if ( current.id == orderId ) {
+				idAlready = true;
+				current.quantity += count;
+				orders[i] = current;
+			}
+		}
+
+		if( !idAlready ) {
+			current = new Object();
+			current.id = orderId;
+			current.count = count;
+			orders[orders.length] = current;
+		}
+
+		this.setArrayCookie( orders );
+
+	};
+
+	SCP.total = function () {
+		var orders = SCP.get();
+		if ( orders == null ){
+			return 0;
+		} else {
+			return orders.length();
+		}
+	};
 
 } ( window.jQuery ) );
