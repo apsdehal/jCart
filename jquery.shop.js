@@ -125,6 +125,15 @@
 		}
 	};
 
+	/* Handy function to get JSON string of cart it can then be passed on to
+	 * server side
+	 *
+	 * @return JSON string with all the data
+	 */
+	SCP.getJSON = function () {
+		return this.cookieHandle.read( this.cookieName );
+	};
+
 	/* function to set cookie from array
 	 *
 	 * @param {array} orders The array to be stored in JSON form to be stored
