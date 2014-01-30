@@ -123,7 +123,7 @@
 			i = 0,
 			current = null;
 
-		if ( orders == null || orders == undefined || orders== "" ){
+		if ( orders == null || orders == undefined ){
 			orders = [];
 		}
 
@@ -133,6 +133,7 @@
 				idAlready = true;
 				current.quantity += count;
 				orders[i] = current;
+				break;
 			}
 		}
 
@@ -148,12 +149,106 @@
 	};
 
 	SCP.total = function () {
-		var orders = SCP.get();
+		var orders = this.get();
 		if ( orders == null ){
 			return 0;
 		} else {
 			return orders.length();
 		}
 	};
+
+	SCP.remove = function ( orderId, count) {
+		count = count ? count : 1;
+
+		var orders = this.get(),
+			i = 0,
+			current = null;
+
+		if ( orders == null || orders == undefined ) {
+			return;
+		} else {
+			for ( i = 0; i < orders.length; i++ ) {
+				current = orders[i];
+				if( orderId == current.id ) {
+					current.quantity -= count;
+					if ( current.quantity <=0 ) {
+						orders.splice( i, 1);
+						i--; //Just in case something breaks
+					} else {
+						orders[i] = current;
+					}
+
+					break;
+				}
+			}
+		}
+
+		this.setArrayCookie( orders );
+
+	};
+
+	SCP.removeItem = function ( orderId ) {
+		if ( orderId == null || orderId == undefined )
+			return;
+
+		var orders = this.get(),
+			i = 0,
+			current = null;
+
+		if ( orders == null || orders == undefined ) {
+			return;
+		} else {
+			for ( i = 0; i < orders.length; i++ ) {
+				current = orders[i];
+				if( orderId == current.id ) {
+					orders.splice( i, 1);
+					break;
+				}
+			}
+		}
+
+
+		this.setArrayCookie( orders );
+
+	};
+
+	SCP.change = function ( orderId, count ){
+		if( count == null || count == undefined )
+			return;
+		if( count == 0 ){
+			this.removeItem( orderId );
+			return;
+		}
+
+		var orders = this.get(),
+			i = 0,
+			current = null;
+
+		if ( orders == null || orders == undefined ) {
+			return;
+		} else {
+			for ( i = 0; i < orders.length; i++ ) {
+				current = orders[i];
+				if( orderId == current.id ) {
+					current.quantity = count;
+					orders[i] = current;
+					break;
+				}
+			}
+		}
+
+		this.setArrayCookie( orders );
+
+	};
+
+	SCP.clear = function () {
+		this.cookieHandle.create( this.cookieName, $.toJSON([]) );
+	};
+
+	SCP.removeCookie = function () {
+		$.cookie.erase( this.cookieName );
+	};
+
+	$.cart = new Cart();
 
 } ( window.jQuery ) );
