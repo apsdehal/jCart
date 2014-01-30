@@ -30,18 +30,21 @@
 		if ( options.duration ) {
 			var date = new Date();
 
+			//Default duration is in day, Converting them to secondsx`
 			date.setTime( date.getTime() + ( options.duration * 24 * 60 * 60 * 1000 ) );
 			expires = '; expires=' + date.toGMTString();
 		} else {
 			expires = '';
 		}
 
+		//Create a string with all the data
 
 		cookieString  = escape( name ) + '=' + escape( value ) + expires;
 		cookieString .= options.path ? '; path=' + options.path : '';
 		cookieString .= options.domain ? '; domain=' + options.domain : '';
 		cookieString .= options.secure ? '; secure=' + options.secure : '';
 
+		//Save cookie
 		document.cookie = cookieString;
 	}
 
@@ -53,11 +56,13 @@
 
 	CP.get = function ( name ) {
 		var nameEq = escape( name ) + '=';
-		var slices = document.cookie.split(';');
+		var slices = document.cookie.split(';');//Split string on the bases of ;
 
 		for ( var i = 0; i < slices.length; i++ ) {
 			var slice = slices[i];
+			//Get single slice which will contain different parameter
 			while ( slice.charAt(0) === ' ' ) slice = slice.substring( 1, slice.length );
+			//If its name of slice then return it
 			if ( slice.indexOf( nameEQ ) === 0 ) return unescape( slice.substring( nameEq.length, slice.length ) );
 		}
 
@@ -89,7 +94,7 @@
 
 	function Cart(){
 		//Constructor
-		var proto = this.prototype;
+		var proto = this.prototype; //Assign prototype
 		proto.cookieName = 'cart';
 		proto.index = 0;
 
@@ -110,6 +115,7 @@
 	 */
 
 	SCP.get = function () {
+		//Parse the JSON string to array
 		var orders = JSON.parse( this.cookieHandle.read( this.cookieName ) );
 
 		if ( orders == null || orders == undefined || orders== "" ){
@@ -160,6 +166,7 @@
 		}
 
 		if( !idAlready ) {
+			//Item is not already added Create a new object and add it to array
 			current = new Object();
 			current.id = orderId;
 			current.count = count;
@@ -192,6 +199,7 @@
 
 
 	SCP.remove = function ( orderId, count) {
+		//if count has not been passed set default count to 1
 		count = count ? count : 1;
 
 		var orders = this.get(),
@@ -206,7 +214,7 @@
 				if( orderId == current.id ) {
 					current.quantity -= count;
 					if ( current.quantity <=0 ) {
-						orders.splice( i, 1);
+						orders.splice( i, 1);//Use array splice method to remove a whole index
 						i--; //Just in case something breaks
 					} else {
 						orders[i] = current;
@@ -227,6 +235,7 @@
 	 */
 
 	SCP.removeItem = function ( orderId ) {
+		//Check orderid
 		if ( orderId == null || orderId == undefined )
 			return;
 
@@ -241,6 +250,7 @@
 				current = orders[i];
 				if( orderId == current.id ) {
 					orders.splice( i, 1);
+					//Use splice method of arrays to remove curent index
 					break;
 				}
 			}
@@ -258,8 +268,10 @@
 	 */
 
 	SCP.change = function ( orderId, count ){
+		//Check count validity
 		if( count == null || count == undefined )
 			return;
+		//If count has been passed as 0 delete that object
 		if( count == 0 ){
 			this.removeItem( orderId );
 			return;
@@ -269,6 +281,7 @@
 			i = 0,
 			current = null;
 
+		//Check if orders are there
 		if ( orders == null || orders == undefined ) {
 			return;
 		} else {
@@ -290,6 +303,7 @@
 	 */
 
 	SCP.clear = function () {
+		// Use handle to cookie to create it
 		this.cookieHandle.create( this.cookieName, JSON.stringify([]) );
 	};
 
@@ -300,6 +314,7 @@
 		$.cookie.erase( this.cookieName );
 	};
 
+	//Assign the class as jQuery method
 	$.cart = new Cart();
 
 } ( window.jQuery ) );
