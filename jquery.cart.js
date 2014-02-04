@@ -8,7 +8,7 @@
 
 	function Cookie () {
 		//constructor
-	};
+	}
 
 	var CP = Cookie.prototype;
 
@@ -39,14 +39,14 @@
 
 		//Create a string with all the data
 
-		cookieString  = escape( name ) + '=' + escape( value ) + expires;
-		cookieString .= options.path ? '; path=' + options.path : '';
-		cookieString .= options.domain ? '; domain=' + options.domain : '';
-		cookieString .= options.secure ? '; secure=' + options.secure : '';
+		cookieString  = escape( name ) + '=' + escape( value ) + expires
+    + options.path ? '; path=' + options.path : ''
+    + options.domain ? '; domain=' + options.domain : ''
+    + options.secure ? '; secure=' + options.secure : '';
 
 		//Save cookie
 		document.cookie = cookieString;
-	}
+	};
 
 	/* function to find a cookie with a certain index
 	 *
@@ -55,7 +55,7 @@
 	 */
 
 	CP.get = function ( name ) {
-		var nameEq = escape( name ) + '=';
+		var nameEQ = escape( name ) + '=';
 		var slices = document.cookie.split(';');//Split string on the bases of ;
 
 		for ( var i = 0; i < slices.length; i++ ) {
@@ -63,7 +63,7 @@
 			//Get single slice which will contain different parameter
 			while ( slice.charAt(0) === ' ' ) slice = slice.substring( 1, slice.length );
 			//If its name of slice then return it
-			if ( slice.indexOf( nameEQ ) === 0 ) return unescape( slice.substring( nameEq.length, slice.length ) );
+			if ( slice.indexOf( nameEQ ) === 0 ) return unescape( slice.substring( nameEQ.length, slice.length ) );
 		}
 
 		return null;
@@ -103,7 +103,7 @@
 		proto.cookieHandle.read = $.cookie.get;
 		proto.cookieHandle.create = $.cookie.create;
 
-	};
+	}
 
 	//Assign Cart class's prototype to a variable for easy use
 	var SCP = Cart.prototype;
@@ -118,7 +118,7 @@
 		//Parse the JSON string to array
 		var orders = JSON.parse( this.cookieHandle.read( this.cookieName ) );
 
-		if ( orders == null || orders == undefined || orders== "" ){
+		if ( orders === null || orders === undefined || orders === "" ){
 			return null;
 		} else {
 			return orders;
@@ -153,14 +153,16 @@
 	 */
 
 	SCP.set = function ( orderId, count ) {
-		count <= 0 ? return;
+    if ( count <=0 ) {
+      return;
+    }
 
-		var orders = this.get();
+		var orders = this.get(),
 			idAlready = false,
 			i = 0,
 			current = null;
 
-		if ( orders == null || orders == undefined ){
+		if ( orders === null || orders === undefined ){
 			orders = [];
 		}
 
@@ -176,7 +178,7 @@
 
 		if( !idAlready ) {
 			//Item is not already added Create a new object and add it to array
-			current = new Object();
+      current = new Object({});
 			current.id = orderId;
 			current.count = count;
 			orders[orders.length] = current;
@@ -193,7 +195,7 @@
 
 	SCP.total = function () {
 		var orders = this.get();
-		if ( orders == null ){
+		if ( orders === null ){
 			return 0;
 		} else {
 			return orders.length();
@@ -215,7 +217,7 @@
 			i = 0,
 			current = null;
 
-		if ( orders == null || orders == undefined ) {
+		if ( orders === null || orders === undefined ) {
 			return;
 		} else {
 			for ( i = 0; i < orders.length; i++ ) {
@@ -245,14 +247,14 @@
 
 	SCP.removeItem = function ( orderId ) {
 		//Check orderid
-		if ( orderId == null || orderId == undefined )
+		if ( orderId === null || orderId === undefined )
 			return;
 
 		var orders = this.get(),
 			i = 0,
 			current = null;
 
-		if ( orders == null || orders == undefined ) {
+		if ( orders === null || orders === undefined ) {
 			return;
 		} else {
 			for ( i = 0; i < orders.length; i++ ) {
@@ -278,10 +280,10 @@
 
 	SCP.change = function ( orderId, count ){
 		//Check count validity
-		if( count == null || count == undefined )
+		if( count === null || count === undefined )
 			return;
 		//If count has been passed as 0 delete that object
-		if( count == 0 ){
+		if( count === 0 ){
 			this.removeItem( orderId );
 			return;
 		}
@@ -291,7 +293,7 @@
 			current = null;
 
 		//Check if orders are there
-		if ( orders == null || orders == undefined ) {
+		if ( orders === null || orders === undefined ) {
 			return;
 		} else {
 			for ( i = 0; i < orders.length; i++ ) {
