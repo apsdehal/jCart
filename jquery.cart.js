@@ -94,19 +94,18 @@
 
 	function Cart(){
 		//Constructor
-		var proto = this.prototype; //Assign prototype
-		proto.cookieName = 'cart';
-		proto.index = 0;
-
-		//Set a handle to read and create cookies
-		proto.cookieHandle = {read:null, create:null};
-		proto.cookieHandle.read = $.cookie.get;
-		proto.cookieHandle.create = $.cookie.create;
-
 	}
 
 	//Assign Cart class's prototype to a variable for easy use
 	var SCP = Cart.prototype;
+
+	SCP.cookieName = 'cart';
+	SCP.index = 0;
+
+	//Set a handle to read and create cookies
+	SCP.cookieHandle = {read:null, create:null};
+	SCP.cookieHandle.read = $.cookie.get;
+	SCP.cookieHandle.create = $.cookie.create;
 
 	/* function to get current orders in array forms
 	 *
