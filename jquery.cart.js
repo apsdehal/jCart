@@ -169,7 +169,7 @@
 			current = orders[i];
 			if ( current.id == orderId ) {
 				idAlready = true;
-				current.quantity += count;
+				current.count += count;
 				orders[i] = current;
 				break;
 			}
@@ -240,7 +240,7 @@
 			i = 0,
 			current = null,
 			j = 0,
-			finals = orders;
+			finals = new Array();
 
 		if ( orders === null || orders === undefined ) {
 			return;
@@ -248,8 +248,8 @@
 			for ( i in orders ) {
 				current = orders[i];
 				if( orderId == current.id ) {
-					current.quantity -= count;
-					if ( current.quantity <=0 ) {
+					current.count -= count;
+					if ( current.count <=0 ) {
 						continue;
 					}
 				}
@@ -257,7 +257,7 @@
 				j++;
 			}
 
-			orders = finals
+			orders = finals;
 			this.setObjectCookie( orders );
 		}
 	};
@@ -272,11 +272,15 @@
 		if ( orderId === null || orderId === undefined )
 			return;
 
+		if( this.total() === 1 ) {
+			this.clear();
+		}
+
 		var orders = this.get(),
 			i = 0,
 			current = null,
 			j = 0,
-			finals = orders;
+			finals;
 
 		if ( orders === null || orders === undefined ) {
 			return;
@@ -289,7 +293,7 @@
 				}
 			}
 
-			orders = finals
+			orders = finals;
 			this.setObjectCookie( orders );
 		}
 	};
@@ -321,7 +325,7 @@
 			for ( i in orders ) {
 				current = orders[i];
 				if( orderId == current.id ) {
-					current.quantity = count;
+					current.count = count;
 					orders[i] = current;
 					break;
 				}
