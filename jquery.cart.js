@@ -38,11 +38,10 @@
 		}
 
 		//Create a string with all the data
-
-		cookieString  = escape( name ) + '=' + escape( value ) + expires
-    + options.path ? '; path=' + options.path : ''
-    + options.domain ? '; domain=' + options.domain : ''
-    + options.secure ? '; secure=' + options.secure : '';
+		cookieString  = escape( name ) + '=' + escape( value ) + expires;
+    	cookieString += options.path ? '; path=' + options.path : '';
+    	cookieString += options.domain ? '; domain=' + options.domain : '';
+    	cookieString += options.secure ? '; secure=' + options.secure : '';
 
 		//Save cookie
 		document.cookie = cookieString;
@@ -107,14 +106,14 @@
 	SCP.cookieHandle.read = $.cookie.get;
 	SCP.cookieHandle.create = $.cookie.create;
 
-	/* function to get current orders in array forms
+	/* function to get current orders in object forms
 	 *
-	 * @return {array} orders Array containing current orders' details with
+	 * @return {object} orders object containing current orders' details with
 	 * quantity nad id
 	 */
 
 	SCP.get = function () {
-		//Parse the JSON string to array
+		//Parse the JSON string to object
 		var orders = JSON.parse( this.cookieHandle.read( this.cookieName ) );
 
 		if ( orders === null || orders === undefined || orders === "" ){
@@ -133,13 +132,13 @@
 		return this.cookieHandle.read( this.cookieName );
 	};
 
-	/* function to set cookie from array
+	/* function to set cookie from object
 	 *
-	 * @param {array} orders The array to be stored in JSON form to be stored
+	 * @param {object} orders The object to be stored in JSON form to be stored
 	 * in Javascript cookies
 	 */
 
-	SCP.setArrayCookie = function ( orders ) {
+	SCP.setObjectCookie = function ( orders ) {
 		var orderJSONString = JSON.stringify( orders );
 
 		this.cookieHandle.create( this.cookieName, orderJSONString );
@@ -159,13 +158,14 @@
 		var orders = this.get(),
 			idAlready = false,
 			i = 0,
-			current = null;
+			current = null,
+			total = this.total();
 
 		if ( orders === null || orders === undefined ){
 			orders = [];
 		}
 
-		for ( i = 0; i<orders.length; i++ ) {
+		for ( i in orders ) {
 			current = orders[i];
 			if ( current.id == orderId ) {
 				idAlready = true;
@@ -176,14 +176,14 @@
 		}
 
 		if( !idAlready ) {
-			//Item is not already added Create a new object and add it to array
-      current = new Object({});
+			//Item is not already added Create a new object and add it to object
+     		current = new Object({});
 			current.id = orderId;
 			current.count = count;
-			orders[orders.length] = current;
+			orders[total] = current;
 		}
 
-		this.setArrayCookie( orders );
+		this.setObjectCookie( orders );
 
 	};
 
@@ -193,11 +193,35 @@
 	 */
 
 	SCP.total = function () {
-		var orders = this.get();
+		var orders = this.get(),
+			i,
+			count = 0;
 		if ( orders === null ){
 			return 0;
 		} else {
-			return orders.length();
+			for ( i in orders ) {
+				count++;
+			}
+			return count;
+		}
+	};
+
+	/* function to get total quantity of all items in the cart
+	 *
+	 * @return {int} No. of total items
+	 */
+
+	SCP.totalQty = function () {
+		var orders = this.get(),
+			count = 0,
+			i;
+		if ( orders === null ){
+			return 0;
+		} else {
+			for ( i in orders ) {
+				count += orders[i].count;
+			}
+			return count;
 		}
 	};
 
@@ -214,29 +238,28 @@
 
 		var orders = this.get(),
 			i = 0,
-			current = null;
+			current = null,
+			j = 0,
+			finals = orders;
 
 		if ( orders === null || orders === undefined ) {
 			return;
 		} else {
-			for ( i = 0; i < orders.length; i++ ) {
+			for ( i in orders ) {
 				current = orders[i];
 				if( orderId == current.id ) {
 					current.quantity -= count;
 					if ( current.quantity <=0 ) {
-						orders.splice( i, 1);//Use array splice method to remove a whole index
-						i--; //Just in case something breaks
-					} else {
-						orders[i] = current;
+						continue;
 					}
-
-					break;
 				}
+				finals[j] = current;
+				j++;
 			}
+
+			orders = finals
+			this.setObjectCookie( orders );
 		}
-
-		this.setArrayCookie( orders );
-
 	};
 
 	/* function to remove all the data of a particular item
@@ -251,24 +274,24 @@
 
 		var orders = this.get(),
 			i = 0,
-			current = null;
+			current = null,
+			j = 0,
+			finals = orders;
 
 		if ( orders === null || orders === undefined ) {
 			return;
 		} else {
-			for ( i = 0; i < orders.length; i++ ) {
+			for ( i in orders ) {
 				current = orders[i];
-				if( orderId == current.id ) {
-					orders.splice( i, 1);
-					//Use splice method of arrays to remove curent index
-					break;
+				if( orderId != current.id ) {
+					finals[j] = current;
+					j++;
 				}
 			}
+
+			orders = finals
+			this.setObjectCookie( orders );
 		}
-
-
-		this.setArrayCookie( orders );
-
 	};
 
 	/* function to change the quantity of an item directly to some no.
@@ -295,7 +318,7 @@
 		if ( orders === null || orders === undefined ) {
 			return;
 		} else {
-			for ( i = 0; i < orders.length; i++ ) {
+			for ( i in orders ) {
 				current = orders[i];
 				if( orderId == current.id ) {
 					current.quantity = count;
@@ -305,7 +328,7 @@
 			}
 		}
 
-		this.setArrayCookie( orders );
+		this.setObjectCookie( orders );
 
 	};
 
