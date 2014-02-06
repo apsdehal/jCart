@@ -19,15 +19,23 @@ Functions available are as documentated below:
 
 $.cart.set( orderId, count );
 //To set an order with quantity = count in the cart.
+//Important: If item is already present this count will be added to current quantity
 
 $.cart.get();
-//Get an array containing orders.
+//Get an object containing orders with attributes id and count
 
 $.cart.getJSON();
 //Get a JSON string of the orders.
 
 $.cart.total();
 //Get total number of types of items in cart.
+
+$.cart.totalQty();
+//Get total nuber of items in cart.
+
+/* For example:- If you have bought 2 Lays' and 1 Uncle Chipps
+   $.cart.total() will be 2 and $.cart.totalQty() will be 3
+*/
 
 $.cart.remove( orderId, count );
 //To remove a certain amount of count from item with id = orderId.
