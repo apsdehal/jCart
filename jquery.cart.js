@@ -257,6 +257,11 @@
 				j++;
 			}
 
+			//If there was single object clear cookies
+			if( j==1 ) {
+				this.clear();
+				return;
+			}
 			orders = finals;
 			this.setObjectCookie( orders );
 		}
@@ -272,15 +277,17 @@
 		if ( orderId === null || orderId === undefined )
 			return;
 
+		//if there was single object clear cookies
 		if( this.total() === 1 ) {
 			this.clear();
+			return;
 		}
 
 		var orders = this.get(),
 			i = 0,
 			current = null,
 			j = 0,
-			finals;
+			finals = new Array();
 
 		if ( orders === null || orders === undefined ) {
 			return;
