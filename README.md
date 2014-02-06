@@ -54,5 +54,12 @@ $.cart.removeCookie();
 ```
 
 By default orders are stored in cookie named 'orders'.
+
 You can override it by setting $.cookie.defaults.
+
 $.cookie object is also available to play with cookies all over.
+
+###License
+MIT License
+
+Copyright (c) 2014 Amanpreet Singh
