@@ -9,6 +9,14 @@ Code is heavily commented for easy understanding.
 
 ###Usage
 
+Include the plugin as follows:-
+
+```html
+<script type="text/javascript" src="jquery.js"/>
+<!-- Must include jQuery before including plugin -->
+<script type="text/javascript" src="jquery.cart.js">
+```
+
 All the methods for the cart are available through `$.cart` variable.
 
 There is an orderid defined for each item along with its quantity.
