@@ -1,9 +1,10 @@
 ( function ( $ ) {
 
-	/*@class Cookie
+	/**
+	 * @class Cookie
 	 *
-	 *Represents the class ot be used to interact with Javascript Cookies
-	 *@constructor
+	 * Represents the class ot be used to interact with Javascript Cookies
+	 * @constructor
 	 */
 
 	function Cookie () {
@@ -12,7 +13,8 @@
 
 	var CP = Cookie.prototype;
 
-	/* function to create a cookie
+	/**
+	 * function to create a cookie
 	 *
 	 * @param {string} name Name to be assigned to the key of cookie
 	 * @param {string} value Value to be assigned to cookie
@@ -47,7 +49,8 @@
 		document.cookie = cookieString;
 	};
 
-	/* function to find a cookie with a certain index
+	/**
+	 * function to find a cookie with a certain index
 	 *
 	 * @param {string} name Name to be found ( index )
 	 * @return {string|null} Value stored in cookie if found
@@ -68,7 +71,8 @@
 		return null;
 	};
 
-	/* function to delete a cookie with a certain index
+	/**
+	 * function to delete a cookie with a certain index
 	 *
 	 * @param {string} name Name to be deleted ( index )
 	 */
@@ -85,7 +89,8 @@
 	$.cookie.defaults = {path: '/'};
 
 
-	/* @class Cart
+	/**
+	 * @class Cart
 	 *
 	 * Represents class to be used as cart
 	 * @constructor
@@ -106,7 +111,8 @@
 	SCP.cookieHandle.read = $.cookie.get;
 	SCP.cookieHandle.create = $.cookie.create;
 
-	/* function to get current orders in object forms
+	/**
+	 * function to get current orders in object forms
 	 *
 	 * @return {object} orders object containing current orders' details with
 	 * quantity nad id
@@ -123,7 +129,8 @@
 		}
 	};
 
-	/* Handy function to get JSON string of cart it can then be passed on to
+	/**
+	 * Handy function to get JSON string of cart it can then be passed on to
 	 * server side
 	 *
 	 * @return JSON string with all the data
@@ -132,7 +139,8 @@
 		return this.cookieHandle.read( this.cookieName );
 	};
 
-	/* function to set cookie from object
+	/**
+	 * function to set cookie from object
 	 *
 	 * @param {object} orders The object to be stored in JSON form to be stored
 	 * in Javascript cookies
@@ -144,7 +152,8 @@
 		this.cookieHandle.create( this.cookieName, orderJSONString );
 	};
 
-	/* function to add a certain count of item to current quantity if it
+	/**
+	 * function to add a certain count of item to current quantity if it
 	 * exists otherwise it's created
 	 * @param {int} orderId Id of the item to be added
 	 * @param {int} count Count of the item to be added (must be > 0)
@@ -187,7 +196,8 @@
 
 	};
 
-	/* function to get total no. of items in the cart
+	/**
+	 * function to get total no. of items in the cart
 	 *
 	 * @return {int} No. of items
 	 */
@@ -206,7 +216,8 @@
 		}
 	};
 
-	/* function to get total quantity of all items in the cart
+	/**
+	 * function to get total quantity of all items in the cart
 	 *
 	 * @return {int} No. of total items
 	 */
@@ -225,7 +236,8 @@
 		}
 	};
 
-	/* function to remove a certain count from an item's quantity
+	/**
+	 * function to remove a certain count from an item's quantity
 	 *
 	 * @param {int} orderId id of item in consideration
 	 * @param {int} count Count to be removed from quantity (by default is 1)
@@ -267,7 +279,8 @@
 		}
 	};
 
-	/* function to remove all the data of a particular item
+	/**
+	 * function to remove all the data of a particular item
 	 *
 	 * @param {int} orderId Id of the item to be deleted
 	 */
@@ -343,7 +356,8 @@
 
 	};
 
-	/* function to clear all the data stored in cookie
+	/**
+	 * function to clear all the data stored in cookie
 	 */
 
 	SCP.clear = function () {
@@ -351,7 +365,8 @@
 		this.cookieHandle.create( this.cookieName, JSON.stringify([]) );
 	};
 
-	/* function to remove the cookie from browser
+	/**
+	 * function to remove the cookie from browser
 	 */
 
 	SCP.removeCookie = function () {
